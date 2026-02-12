@@ -2,13 +2,67 @@
 const CONFIG = {
     userPoolId: 'us-east-1_85nSl3wJo',
     clientId: '7np2mirl79g9ojjevgqcno5lta',
-    apiEndpoint: 'https://fkgitvrra6.execute-api.us-east-1.amazonaws.com/prod'
+    apiEndpoint: 'https://fkgitvrra6.execute-api.us-east-1.amazonaws.com/prod',
+    cognitoDomain: 'https://imran-game-zone.auth.us-east-1.amazoncognito.com',
+    redirectUri: window.location.origin + '/callback.html'
 };
 
 class AuthService {
     constructor() {
         this.token = localStorage.getItem('idToken');
         this.user = JSON.parse(localStorage.getItem('user') || 'null');
+        this.isGuest = localStorage.getItem('isGuest') === 'true';
+    }
+
+    continueAsGuest() {
+        this.isGuest = true;
+        localStorage.setItem('isGuest', 'true');
+        localStorage.setItem('user', JSON.stringify({ username: 'Guest', userId: 'guest' }));
+        this.user = { username: 'Guest', userId: 'guest' };
+    }
+
+    signInWithGoogle() {
+        const url = `${CONFIG.cognitoDomain}/oauth2/authorize?` +
+            `identity_provider=Google&` +
+            `redirect_uri=${encodeURIComponent(CONFIG.redirectUri)}&` +
+            `response_type=code&` +
+            `client_id=${CONFIG.clientId}&` +
+            `scope=email openid profile`;
+        window.location.href = url;
+    }
+
+    signInWithGitHub() {
+        const url = `${CONFIG.cognitoDomain}/oauth2/authorize?` +
+            `identity_provider=GitHub&` +
+            `redirect_uri=${encodeURIComponent(CONFIG.redirectUri)}&` +
+            `response_type=code&` +
+            `client_id=${CONFIG.clientId}&` +
+            `scope=email openid profile`;
+        window.location.href = url;
+    }
+
+    async handleOAuthCallback(code) {
+        const response = await fetch(`${CONFIG.cognitoDomain}/oauth2/token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                grant_type: 'authorization_code',
+                client_id: CONFIG.clientId,
+                code: code,
+                redirect_uri: CONFIG.redirectUri
+            })
+        });
+
+        const data = await response.json();
+        if (data.id_token) {
+            this.token = data.id_token;
+            localStorage.setItem('idToken', this.token);
+            localStorage.setItem('accessToken', data.access_token);
+            localStorage.setItem('refreshToken', data.refresh_token);
+            await this.loadUserProfile();
+            return true;
+        }
+        return false;
     }
 
     async signUp(email, password, username) {
@@ -120,12 +174,13 @@ class AuthService {
     signOut() {
         this.token = null;
         this.user = null;
+        this.isGuest = false;
         localStorage.clear();
         window.location.href = 'index.html';
     }
 
     isAuthenticated() {
-        return !!this.token;
+        return !!this.token || this.isGuest;
     }
 
     getUser() {
