@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+        }
+        nav {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            transition: opacity 0.3s;
+        }
+        nav a:hover { opacity: 0.7; }
+        .logo { font-size: 24px; font-weight: bold; }
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        h1 {
+            color: white;
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .welcome {
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        #games {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .game-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .game-card h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        .game-card p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">🎮 Imran's Game Zone</div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="docs.html">Documentation</a>
+        </div>
+    </nav>
+    
+    <div class="content">
+        <h1>🎮 Game Hub</h1>
+        <p class="welcome">Welcome to Imran's Game Zone. Select your favourite game.</p>
+        <div id="games"></div>
+    </div>
+    
+    <script>
+        const games = [
+            {
+                name: 'Sudoku',
+                file: 'sudoku.html',
+                description: 'Classic number puzzle game. Fill the 9x9 grid with numbers 1-9.'
+            },
+            {
+                name: 'Tetris',
+                file: 'tetris.html',
+                description: 'Stack falling blocks and clear lines to score points.'
+            },
+            {
+                name: 'Snake',
+                file: 'snake.html',
+                description: 'Guide the snake to eat food and grow longer without hitting walls.'
+            }
+        ];
+
+        const gamesContainer = document.getElementById('games');
+        
+        games.forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.innerHTML = `
+                <h2>${game.name}</h2>
+                <p>${game.description}</p>
+            `;
+            card.onclick = () => window.location.href = game.file;
+            gamesContainer.appendChild(card);
+        });
+    </script>
+</body>
+</html>

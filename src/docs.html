@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Game Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        nav {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            transition: opacity 0.3s;
+        }
+        nav a:hover { opacity: 0.7; }
+        .logo { font-size: 24px; font-weight: bold; }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 { color: #667eea; margin-bottom: 30px; }
+        h2 { color: #764ba2; margin-top: 30px; margin-bottom: 15px; }
+        p { line-height: 1.8; margin-bottom: 15px; color: #333; }
+        .game-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .controls {
+            background: #e8e8e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .controls div { padding: 5px 0; }
+        code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">🎮 Imran's Game Zone</div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="docs.html">Documentation</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Game Documentation</h1>
+        <p>Welcome to Imran's Game Zone! This page contains instructions and tips for all available games.</p>
+        
+        <div class="game-section">
+            <h2>🔢 Sudoku</h2>
+            <p>Sudoku is a classic number puzzle game where you fill a 9x9 grid with numbers 1-9.</p>
+            
+            <h3>How to Play:</h3>
+            <p>1. Click on any empty cell to select it</p>
+            <p>2. Type a number from 1-9</p>
+            <p>3. Fill all empty cells following these rules:</p>
+            <ul style="margin-left: 30px; line-height: 2;">
+                <li>Each row must contain numbers 1-9 without repetition</li>
+                <li>Each column must contain numbers 1-9 without repetition</li>
+                <li>Each 3x3 box must contain numbers 1-9 without repetition</li>
+            </ul>
+            
+            <h3>Features:</h3>
+            <div class="controls">
+                <div><strong>Timer:</strong> Tracks how long you've been playing</div>
+                <div><strong>Pause:</strong> Pause the game and hide the grid</div>
+                <div><strong>Check:</strong> Validate your solution (green = correct, red = incorrect)</div>
+                <div><strong>New Game:</strong> Reset the puzzle and timer</div>
+                <div><strong>Auto-save:</strong> Your progress is automatically saved</div>
+            </div>
+        </div>
+        
+        <div class="game-section">
+            <h2>🎮 Tetris</h2>
+            <p>Tetris is a classic block-stacking game where you arrange falling pieces to clear lines.</p>
+            
+            <h3>How to Play:</h3>
+            <p>1. Click "Start Game" to begin</p>
+            <p>2. Use keyboard controls to move and rotate falling pieces</p>
+            <p>3. Complete horizontal lines to clear them and score points</p>
+            <p>4. Game ends when pieces stack to the top</p>
+            
+            <h3>Controls:</h3>
+            <div class="controls">
+                <div><code>←</code> Move piece left</div>
+                <div><code>→</code> Move piece right</div>
+                <div><code>↓</code> Move piece down faster</div>
+                <div><code>↑</code> Rotate piece</div>
+            </div>
+            
+            <h3>Features:</h3>
+            <div class="controls">
+                <div><strong>Score:</strong> Earn points by clearing lines</div>
+                <div><strong>Level:</strong> Speed increases as you score more points</div>
+                <div><strong>Lines:</strong> Track total lines cleared</div>
+                <div><strong>Pause:</strong> Pause/resume the game anytime</div>
+            </div>
+            
+            <h3>Tips:</h3>
+            <ul style="margin-left: 30px; line-height: 2;">
+                <li>Try to keep the stack low and even</li>
+                <li>Clear multiple lines at once for bonus points</li>
+                <li>Plan ahead - look at the piece shape and color</li>
+                <li>Use the pause button if you need a break</li>
+            </ul>
+        </div>
+        
+        <div class="game-section">
+            <h2>🐍 Snake</h2>
+            <p>Snake is a classic arcade game where you control a growing snake that must eat food while avoiding obstacles.</p>
+            
+            <h3>How to Play:</h3>
+            <p>1. Click "Start Game" to begin</p>
+            <p>2. Use arrow keys to control the snake's direction</p>
+            <p>3. Eat the red food to grow longer and score points</p>
+            <p>4. Avoid hitting the walls or your own tail</p>
+            
+            <h3>Controls:</h3>
+            <div class="controls">
+                <div><code>↑</code> Move up</div>
+                <div><code>↓</code> Move down</div>
+                <div><code>←</code> Move left</div>
+                <div><code>→</code> Move right</div>
+            </div>
+            
+            <h3>Features:</h3>
+            <div class="controls">
+                <div><strong>Score:</strong> Earn 10 points for each food eaten</div>
+                <div><strong>High Score:</strong> Your best score is saved locally</div>
+                <div><strong>Pause:</strong> Pause/resume the game anytime</div>
+            </div>
+            
+            <h3>Tips:</h3>
+            <ul style="margin-left: 30px; line-height: 2;">
+                <li>Plan your path ahead to avoid trapping yourself</li>
+                <li>Use the edges carefully - they can be helpful or deadly</li>
+                <li>The snake moves continuously, so stay alert</li>
+                <li>You can't reverse direction (e.g., can't go left if moving right)</li>
+            </ul>
+        </div>
+        
+        <h2>Technical Information</h2>
+        <p>All games are built with pure HTML, CSS, and JavaScript - no external dependencies required. They work in any modern web browser and save your progress locally.</p>
+        
+        <p style="margin-top: 30px; text-align: center; color: #666;">
+            <a href="index.html" style="color: #667eea; text-decoration: none; font-weight: bold;">← Back to Game Selection</a>
+        </p>
+    </div>
+</body>
+</html>
