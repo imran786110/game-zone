@@ -20,14 +20,18 @@
             justify-content: space-between;
             align-items: center;
         }
-        nav a {
+        nav a, nav button {
             color: white;
             text-decoration: none;
             margin: 0 15px;
             font-size: 18px;
             transition: opacity 0.3s;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
-        nav a:hover { opacity: 0.7; }
+        nav a:hover, nav button:hover { opacity: 0.7; }
+        .logout-btn { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 5px; }
         .logo { font-size: 24px; font-weight: bold; }
         .content {
             flex: 1;
@@ -87,16 +91,37 @@
         <div>
             <a href="index.html">Home</a>
             <a href="docs.html">Documentation</a>
+            <span id="userInfo"></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </nav>
     
     <div class="content">
         <h1>🎮 Game Hub</h1>
-        <p class="welcome">Welcome to Imran's Game Zone. Select your favourite game.</p>
+        <p class="welcome" id="welcomeMsg">Welcome to Imran's Game Zone. Select your favourite game.</p>
         <div id="games"></div>
     </div>
     
+    <script src="js/auth.js"></script>
     <script>
+        // Check authentication
+        if (!auth.isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        // Display user info
+        const user = auth.getUser();
+        if (user) {
+            document.getElementById('welcomeMsg').textContent = `Welcome back, ${user.username || 'Player'}!`;
+            if (auth.isGuest) {
+                document.getElementById('userInfo').innerHTML = '<span style="margin-right: 15px;">👤 Guest</span>';
+            }
+        }
+
+        function logout() {
+            auth.signOut();
+        }
+
         const games = [
             {
                 name: 'Sudoku',
