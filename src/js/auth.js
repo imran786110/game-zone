@@ -28,6 +28,22 @@ class AuthService {
         return await response.json();
     }
 
+    async confirmSignUp(email, code) {
+        const response = await fetch(`https://cognito-idp.us-east-1.amazonaws.com/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-amz-json-1.1',
+                'X-Amz-Target': 'AWSCognitoIdentityProviderService.ConfirmSignUp'
+            },
+            body: JSON.stringify({
+                ClientId: CONFIG.clientId,
+                Username: email,
+                ConfirmationCode: code
+            })
+        });
+        return await response.json();
+    }
+
     async signIn(email, password) {
         const response = await fetch(`https://cognito-idp.us-east-1.amazonaws.com/`, {
             method: 'POST',

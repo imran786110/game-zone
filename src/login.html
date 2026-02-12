@@ -44,6 +44,11 @@
                 <input type="text" id="username">
             </div>
             
+            <div class="form-group" id="codeGroup" style="display: none;">
+                <label for="code">Verification Code (check your email)</label>
+                <input type="text" id="code" placeholder="Enter 6-digit code">
+            </div>
+            
             <button type="submit" id="submitBtn">Sign In</button>
         </form>
         
@@ -56,21 +61,26 @@
     <script src="js/auth.js"></script>
     <script>
         let isSignUp = false;
+        let needsVerification = false;
+        let pendingEmail = '';
 
         document.getElementById('toggleLink').addEventListener('click', (e) => {
             e.preventDefault();
             isSignUp = !isSignUp;
+            needsVerification = false;
             
             if (isSignUp) {
                 document.getElementById('submitBtn').textContent = 'Sign Up';
                 document.getElementById('toggleText').textContent = 'Already have an account?';
                 document.getElementById('toggleLink').textContent = 'Sign In';
                 document.getElementById('usernameGroup').style.display = 'block';
+                document.getElementById('codeGroup').style.display = 'none';
             } else {
                 document.getElementById('submitBtn').textContent = 'Sign In';
                 document.getElementById('toggleText').textContent = "Don't have an account?";
                 document.getElementById('toggleLink').textContent = 'Sign Up';
                 document.getElementById('usernameGroup').style.display = 'none';
+                document.getElementById('codeGroup').style.display = 'none';
             }
         });
 
@@ -80,17 +90,35 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const username = document.getElementById('username').value;
+            const code = document.getElementById('code').value;
             
             hideMessages();
             
             try {
-                if (isSignUp) {
+                if (needsVerification) {
+                    // Verify the code
+                    const result = await auth.confirmSignUp(pendingEmail, code);
+                    if (result.__type) {
+                        showError(result.message || 'Verification failed');
+                    } else {
+                        showSuccess('Email verified! You can now sign in.');
+                        needsVerification = false;
+                        document.getElementById('codeGroup').style.display = 'none';
+                        document.getElementById('submitBtn').textContent = 'Sign In';
+                        isSignUp = false;
+                        document.getElementById('usernameGroup').style.display = 'none';
+                        document.getElementById('toggleText').textContent = "Don't have an account?";
+                        document.getElementById('toggleLink').textContent = 'Sign Up';
+                    }
+                } else if (isSignUp) {
                     const result = await auth.signUp(email, password, username);
                     if (result.UserSub) {
-                        showSuccess('Account created! Please check your email to verify, then sign in.');
-                        setTimeout(() => {
-                            document.getElementById('toggleLink').click();
-                        }, 2000);
+                        showSuccess('Account created! Check your email for verification code.');
+                        needsVerification = true;
+                        pendingEmail = email;
+                        document.getElementById('codeGroup').style.display = 'block';
+                        document.getElementById('submitBtn').textContent = 'Verify Email';
+                        document.getElementById('password').value = '';
                     } else {
                         showError(result.message || 'Sign up failed');
                     }
