@@ -1,0 +1,147 @@
+┌─────────────────────────────────────────────────────────────────────────────┐
+│              Game Zone - Complete AWS Architecture with Auth                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+                              USER AUTHENTICATION FLOW
+                              ═══════════════════════
+
+    ┌─────────┐
+    │  User   │
+    │ Browser │
+    └────┬────┘
+         │
+         │ 1. Login/Signup
+         ▼
+    ┌──────────────┐
+    │   Cognito    │ ◀─── User Pool
+    │  User Pool   │      • Email verification
+    │              │      • Password policy
+    └──────┬───────┘      • JWT tokens
+           │
+           │ 2. JWT Token
+           ▼
+    ┌──────────────┐
+    │  CloudFront  │
+    │     CDN      │
+    └──────┬───────┘
+           │
+           │ 3. Static Content
+           ▼
+    ┌──────────────┐
+    │  S3 Bucket   │
+    │   Frontend   │      • login.html
+    │              │      • profile.html
+    └──────────────┘      • games (sudoku, tetris, snake)
+
+
+                              API REQUEST FLOW
+                              ════════════════
+
+    ┌─────────┐
+    │  User   │
+    │ Browser │
+    └────┬────┘
+         │
+         │ API Request + JWT
+         ▼
+    ┌──────────────────┐
+    │   API Gateway    │
+    │   (HTTP API)     │
+    └────────┬─────────┘
+             │
+             │ Validate JWT
+             ▼
+    ┌──────────────────┐
+    │    Cognito       │
+    │   Authorizer     │
+    └────────┬─────────┘
+             │
+             │ Authorized
+             ▼
+    ┌──────────────────┐
+    │     Lambda       │      Endpoints:
+    │  (Node.js 20)    │      • GET  /profile
+    │                  │      • PUT  /profile
+    └────────┬─────────┘      • POST /scores
+             │                • GET  /scores/{gameId}
+             │                • GET  /leaderboard/{gameId}
+             ▼
+    ┌──────────────────┐
+    │    DynamoDB      │
+    │                  │
+    │  ┌────────────┐  │
+    │  │  Profiles  │  │      • userId (PK)
+    │  │   Table    │  │      • username, gamesPlayed
+    │  └────────────┘  │
+    │                  │
+    │  ┌────────────┐  │
+    │  │   Scores   │  │      • userId (PK)
+    │  │   Table    │  │      • gameId (SK)
+    │  └────────────┘  │      • score, timestamp
+    │                  │
+    └──────────────────┘
+
+
+                          INFRASTRUCTURE COMPONENTS
+                          ═════════════════════════
+
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   CloudFront    │  │   API Gateway   │  │     Cognito     │
+│                 │  │                 │  │                 │
+│ • Global CDN    │  │ • REST API      │  │ • User Pool     │
+│ • HTTPS         │  │ • JWT Auth      │  │ • Client App    │
+│ • Edge Cache    │  │ • CORS          │  │ • Domain        │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│    S3 Bucket    │  │     Lambda      │  │    DynamoDB     │
+│                 │  │                 │  │                 │
+│ • Static Site   │  │ • API Logic     │  │ • NoSQL DB      │
+│ • HTML/JS/CSS   │  │ • Node.js 20    │  │ • Auto-scale    │
+│ • Public Read   │  │ • IAM Role      │  │ • GSI Index     │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+
+
+                              TERRAFORM MODULES
+                              ═════════════════
+
+    ┌──────────────────────────────────────────────────────┐
+    │                    Terraform                         │
+    │                                                      │
+    │  • main.tf          → S3 + CloudFront               │
+    │  • cognito.tf       → User authentication           │
+    │  • dynamodb.tf      → Database tables               │
+    │  • lambda.tf        → Backend functions             │
+    │  • api-gateway.tf   → API endpoints                 │
+    │  • variables.tf     → Configuration                 │
+    │  • outputs.tf       → Deployment info               │
+    └──────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  FEATURES                                                               │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ✓ User registration & login with email verification                   │
+│  ✓ JWT-based authentication                                            │
+│  ✓ User profiles with customizable usernames                           │
+│  ✓ Game score tracking per user                                        │
+│  ✓ Public leaderboards per game                                        │
+│  ✓ Secure API with Cognito authorizer                                  │
+│  ✓ Auto-scaling serverless architecture                                │
+│  ✓ Infrastructure as Code (Terraform)                                  │
+│  ✓ HTTPS everywhere                                                    │
+│  ✓ Pay-per-use pricing model                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  SECURITY                                                               │
+├─────────────────────────────────────────────────────────────────────────┤
+│  • Password policy: 8+ chars, uppercase, lowercase, numbers            │
+│  • JWT tokens with expiration                                          │
+│  • API Gateway authorization                                           │
+│  • DynamoDB encryption at rest                                         │
+│  • IAM least privilege roles                                           │
+│  • CORS configured                                                     │
+└─────────────────────────────────────────────────────────────────────────┘

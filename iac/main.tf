@@ -65,6 +65,16 @@ resource "aws_s3_object" "html_files" {
   etag         = filemd5("${path.module}/../src/${each.value}")
 }
 
+resource "aws_s3_object" "js_files" {
+  for_each = fileset("${path.module}/../src/js", "*.js")
+
+  bucket       = aws_s3_bucket.game_zone.id
+  key          = "js/${each.value}"
+  source       = "${path.module}/../src/js/${each.value}"
+  content_type = "application/javascript"
+  etag         = filemd5("${path.module}/../src/js/${each.value}")
+}
+
 resource "aws_cloudfront_distribution" "game_zone" {
   enabled             = true
   default_root_object = "index.html"

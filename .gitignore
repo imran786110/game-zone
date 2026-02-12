@@ -3,3 +3,8 @@
 *.tfstate
 *.tfstate.*
 .terraform.lock.hcl
+
+# Lambda
+backend/lambda/node_modules/
+backend/lambda.zip
+outputs.json

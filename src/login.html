@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Game Zone</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); width: 100%; max-width: 400px; }
+        h1 { color: #667eea; margin: 0 0 30px 0; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #333; font-weight: bold; }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        input:focus { outline: none; border-color: #667eea; }
+        button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #764ba2; }
+        .toggle { text-align: center; margin-top: 20px; color: #666; }
+        .toggle a { color: #667eea; text-decoration: none; font-weight: bold; }
+        .toggle a:hover { text-decoration: underline; }
+        .error { background: #fee; border: 1px solid #fcc; color: #c33; padding: 10px; border-radius: 5px; margin-bottom: 15px; display: none; }
+        .success { background: #efe; border: 1px solid #cfc; color: #3c3; padding: 10px; border-radius: 5px; margin-bottom: 15px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Game Zone</h1>
+        
+        <div id="error" class="error"></div>
+        <div id="success" class="success"></div>
+        
+        <form id="authForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            
+            <div class="form-group" id="usernameGroup" style="display: none;">
+                <label for="username">Username</label>
+                <input type="text" id="username">
+            </div>
+            
+            <button type="submit" id="submitBtn">Sign In</button>
+        </form>
+        
+        <div class="toggle">
+            <span id="toggleText">Don't have an account?</span>
+            <a href="#" id="toggleLink">Sign Up</a>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        let isSignUp = false;
+
+        document.getElementById('toggleLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            isSignUp = !isSignUp;
+            
+            if (isSignUp) {
+                document.getElementById('submitBtn').textContent = 'Sign Up';
+                document.getElementById('toggleText').textContent = 'Already have an account?';
+                document.getElementById('toggleLink').textContent = 'Sign In';
+                document.getElementById('usernameGroup').style.display = 'block';
+            } else {
+                document.getElementById('submitBtn').textContent = 'Sign In';
+                document.getElementById('toggleText').textContent = "Don't have an account?";
+                document.getElementById('toggleLink').textContent = 'Sign Up';
+                document.getElementById('usernameGroup').style.display = 'none';
+            }
+        });
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value;
+            
+            hideMessages();
+            
+            try {
+                if (isSignUp) {
+                    const result = await auth.signUp(email, password, username);
+                    if (result.UserSub) {
+                        showSuccess('Account created! Please check your email to verify, then sign in.');
+                        setTimeout(() => {
+                            document.getElementById('toggleLink').click();
+                        }, 2000);
+                    } else {
+                        showError(result.message || 'Sign up failed');
+                    }
+                } else {
+                    const result = await auth.signIn(email, password);
+                    if (result.AuthenticationResult) {
+                        window.location.href = 'index.html';
+                    } else {
+                        showError(result.message || 'Sign in failed');
+                    }
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function hideMessages() {
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('success').style.display = 'none';
+        }
+
+        if (auth.isAuthenticated()) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

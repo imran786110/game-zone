@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Game Zone</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #222; color: #fff; min-height: 100vh; }
+        nav { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; margin: 0 10px; font-size: 16px; transition: opacity 0.3s; }
+        nav a:hover { opacity: 0.7; }
+        .logo { font-size: 20px; font-weight: bold; }
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .profile-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; margin-bottom: 30px; }
+        .profile-card h2 { margin: 0 0 20px 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: none; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+        button { padding: 10px 20px; background: #fff; color: #667eea; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-right: 10px; }
+        button:hover { opacity: 0.9; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+        .stat-card { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; text-align: center; }
+        .stat-card h3 { margin: 0 0 10px 0; font-size: 14px; opacity: 0.8; }
+        .stat-card .value { font-size: 32px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">🎮 Imran's Game Zone</div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="#" onclick="auth.signOut()">Sign Out</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-card">
+            <h2>Profile Settings</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" id="email" readonly>
+            </div>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username">
+            </div>
+            <button onclick="updateProfile()">Update Profile</button>
+        </div>
+
+        <h2>Your Stats</h2>
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Games Played</h3>
+                <div class="value" id="gamesPlayed">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Member Since</h3>
+                <div class="value" id="memberSince" style="font-size: 18px;">-</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        if (!auth.isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        async function loadProfile() {
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('email').value = user.userId;
+                document.getElementById('username').value = user.username || '';
+                document.getElementById('gamesPlayed').textContent = user.gamesPlayed || 0;
+                
+                if (user.createdAt) {
+                    const date = new Date(user.createdAt);
+                    document.getElementById('memberSince').textContent = date.toLocaleDateString();
+                }
+            }
+        }
+
+        async function updateProfile() {
+            const username = document.getElementById('username').value;
+            try {
+                await auth.updateProfile(username);
+                alert('Profile updated successfully!');
+                loadProfile();
+            } catch (error) {
+                alert('Failed to update profile: ' + error.message);
+            }
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>
