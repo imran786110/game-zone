@@ -24,32 +24,32 @@
         nav a:hover { opacity: 0.7; }
         .logo { font-size: 20px; font-weight: bold; }
         .game-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
-        h1 { margin: 5px 0; font-size: 24px; }
-        #game { display: flex; gap: 20px; align-items: center; }
-        canvas { border: 2px solid #fff; background: #000; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        h1 { margin: 10px 0; font-size: 32px; }
+        #game { display: flex; gap: 30px; align-items: center; }
+        canvas { border: 3px solid #fff; background: #000; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
         #dashboard { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 12px;
-            border-radius: 10px;
-            min-width: 180px;
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 220px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         #score, #level, #lines { 
-            font-size: 16px; 
-            margin-bottom: 10px;
-            padding: 8px;
+            font-size: 20px; 
+            margin-bottom: 15px;
+            padding: 12px;
             background: rgba(255,255,255,0.1);
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
         }
         button { 
             width: 100%;
-            padding: 8px;
-            font-size: 14px;
+            padding: 12px;
+            font-size: 16px;
             cursor: pointer;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             background: #fff;
             color: #667eea;
             font-weight: bold;
@@ -57,12 +57,12 @@
         }
         button:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         button:disabled { opacity: 0.5; cursor: not-allowed; }
-        #controls { margin-top: 12px; font-size: 11px; line-height: 1.6; }
+        #controls { margin-top: 20px; font-size: 13px; line-height: 1.8; }
         #controls div { 
             background: rgba(255,255,255,0.1);
-            padding: 4px;
-            border-radius: 4px;
-            margin-bottom: 3px;
+            padding: 6px;
+            border-radius: 5px;
+            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -91,13 +91,13 @@
                     <div>↑ Rotate</div>
                 </div>
             </div>
-            <canvas id="canvas" width="300" height="480"></canvas>
+            <canvas id="canvas" width="400" height="400"></canvas>
         </div>
     </div>
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const COLS = 10, ROWS = 16, BLOCK = 30;
+        const COLS = 10, ROWS = 20, BLOCK = 20;
         
         const SHAPES = [
             [[1,1,1,1]], // I
