@@ -1,8 +1,8 @@
 // Configuration - Update after deployment
 const CONFIG = {
-    userPoolId: 'YOUR_USER_POOL_ID',
-    clientId: 'YOUR_CLIENT_ID',
-    apiEndpoint: 'YOUR_API_ENDPOINT'
+    userPoolId: 'us-east-1_85nSl3wJo',
+    clientId: '7np2mirl79g9ojjevgqcno5lta',
+    apiEndpoint: 'https://fkgitvrra6.execute-api.us-east-1.amazonaws.com/prod'
 };
 
 class AuthService {
